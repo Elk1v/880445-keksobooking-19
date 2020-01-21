@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Matey Ilkiv](https://up.htmlacademy.ru/javascript/19/user/880445).
-* Наставник: [Даниил Царёв}(https://htmlacademy.ru/profile/id945835).
+* Наставник: [Даниил Царёв](https://htmlacademy.ru/profile/id945835).
 
 ---
 
