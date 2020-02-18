@@ -1,16 +1,5 @@
 'use strict';
 
-var AUTHOR_AVATAR = [
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08'
-];
-
 var OFFER_TITLE = [
   'Кондоминиум',
   'Квартира целиком',
@@ -79,27 +68,53 @@ var OFFER_PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var ROOMS_NUMBER = [
+  3,
+  5,
+  1,
+  8,
+  2,
+  1,
+  1,
+  4
+];
+var GUESTS_NUMBER = [
+  2,
+  5,
+  1,
+  7,
+  1,
+  1,
+  1,
+  3
+];
+
 
 var TOTAL_OFFERS = 8;
 
-var POSITION_X = document.querySelector('.map').offsetWidth;
+var MAX_X = document.querySelector('.map').offsetWidth;
+var MIN_X = 70;
 
-var makeOffers = function (indexOffer) {
+var map = document.querySelector('.map');
+var mapPinsArea = map.querySelector('.map__pins');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var createOffer = function (indexOffer) {
   var createdOffer = {
 
     author: {
-      avatar: 'img/avatars/user' + AUTHOR_AVATAR[i] + '.png'
+      avatar: 'img/avatars/user0' + indexOffer + '.png'
     },
 
     offer: {
       title: OFFER_TITLE[indexOffer],
       address: OFFER_ADDRESS[indexOffer],
       price: OFFER_PRICE[indexOffer],
-      type: OFFER_TYPE[Math.floor(Math.random() * OFFER_TYPE.length)],
-      rooms: Math.floor(Math.random() * 4) + 1,
-      guests: Math.floor(Math.random() * 10) + 1,
-      checkin: OFFER_CHECKS[Math.floor(Math.random() * OFFER_CHECKS.length)],
-      checkout: OFFER_CHECKS[Math.floor(Math.random() * OFFER_CHECKS.length)],
+      type: OFFER_TYPE[getRandomArr(OFFER_TYPE)],
+      rooms: ROOMS_NUMBER[indexOffer],
+      guests: GUESTS_NUMBER[indexOffer],
+      checkin: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
+      checkout: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
       eatures: OFFER_FEATURES[indexOffer],
       description: OFFER_DESCRIPTION[indexOffer],
       photos: OFFER_PHOTOS[Math.floor(Math.random() * OFFER_PHOTOS.length)]
@@ -107,23 +122,55 @@ var makeOffers = function (indexOffer) {
     },
 
     location: {
-      x: Math.floor(Math.random() * POSITION_X + 1),
-      y: Math.floor(Math.random() * (630 - 130 + 1)) + 130 // Range between min(130) and max (630)
+      x: getRandomBetween(MIN_X, MAX_X),
+      y: getRandomBetween(130, 630)
     }
   };
-    // eslint-disable-next-line no-console
+
   return createdOffer;
 };
 
-makeOffers(1);
+createOffer(1);
 
-var sortOffer = function (notSortedOffer) {
+var getRandomArr = function (array) {
+  return array[Math.floor(Math.random() * array.length)];
+};
+
+var getRandomBetween = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var createOffers = function (totalOffers) {
   var sortedArr = [];
 
-  for (var i = 0; i < TOTAL_OFFERS; i++) {
-    sortedArr [i] = makeOffers(i);
+  for (var i = 0; i < totalOffers; i++) {
+    sortedArr [i] = createOffer(i);
   }
 };
 
-var mapField = document.querySelector('.map');
-mapField.classList.remove('map--faded');
+
+map.classList.remove('map--faded');
+
+var renderPin = function (pinInfo) {
+  var pinElement = pinTemplate.cloneNode(true);
+
+  pinElement.style.left = pinInfo.location.x + 'px';
+  pinElement.style.top = pinInfo.location.y + 'px';
+  pinElement.querySelector('img').src = pinInfo.author.avatar;
+  pinElement.querySelector('img').alt = pinInfo.offer.title;
+
+  return pinElement;
+};
+
+var renderPins = function (pinsInfo) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < TOTAL_OFFERS; i++) {
+    fragment.appendChild(renderPin(pinsInfo[i]));
+  }
+
+  return fragment;
+};
+
+var offersArr = createOffers(TOTAL_OFFERS);
+mapPinsArea.appendChild(renderPins(offersArr));
