@@ -58,26 +58,6 @@ var OFFER_PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
-var ROOMS_NUMBER = [
-  3,
-  5,
-  1,
-  8,
-  2,
-  1,
-  1,
-  4
-];
-var GUESTS_NUMBER = [
-  2,
-  5,
-  1,
-  7,
-  1,
-  1,
-  1,
-  3
-];
 
 var address = {
   x: getRandomBetween(OFFER_LOCATION.X.MIN, OFFER_LOCATION.X.MAX),
@@ -101,6 +81,7 @@ var OFFER_LOCATION = {
   }
 };
 
+var guestsNumber = Math.floor(Math.random() * 3);
 
 var TOTAL_OFFERS = 8;
 
@@ -126,6 +107,7 @@ var createOffers = function (totalOffers) {
 };
 
 var createOffer = function (indexOffer) {
+  // eslint-disable-next-line no-return-assign
   return {
 
     author: {
@@ -137,8 +119,8 @@ var createOffer = function (indexOffer) {
       address: address.x + ', ' + address.y,
       price: OFFER_PRICE[indexOffer],
       type: OFFER_TYPE[getRandomArr(OFFER_TYPE)],
-      rooms: ROOMS_NUMBER[indexOffer],
-      guests: GUESTS_NUMBER[indexOffer],
+      rooms: guestsNumber === 0 ? 100 : Math.floor(Math.random() * 3) + guestsNumber,
+      guests: guestsNumber,
       checkin: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
       checkout: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
       eatures: OFFER_FEATURES[indexOffer],
