@@ -10,16 +10,6 @@ var OFFER_TITLE = [
   'Капсульная комната',
   'Бунгало'
 ];
-var OFFER_ADDRESS = [
-  '600, 450',
-  '200, 140',
-  '90, 230',
-  '560, 220',
-  '800, 600',
-  '560, 100',
-  '230, 700',
-  '310 920'
-];
 
 var OFFER_PRICE = [
   700,
@@ -60,7 +50,7 @@ var OFFER_DESCRIPTION = [
   'You will make an optimum decision',
   'Free hugs and cookies!',
   'Extremely rear',
-  'Should be the bes offer!'
+  'Should be the best offer!'
 ];
 
 var OFFER_PHOTOS = [
@@ -89,48 +79,35 @@ var GUESTS_NUMBER = [
   3
 ];
 
+var address = {
+  x: getRandomBetween(OFFER_LOCATION.X.MIN, OFFER_LOCATION.X.MAX),
+  y: getRandomBetween(OFFER_LOCATION.Y.MIN, OFFER_LOCATION.Y.MAX)
+};
+
+var PIN_SIZE = {
+  width: 40,
+  height: 40
+};
+
+
+var OFFER_LOCATION = {
+  X: {
+    MIN: 70,
+    MAX: document.querySelector('.map').offsetWidth,
+  },
+  Y: {
+    MIN: 130,
+    MAX: 630
+  }
+};
+
 
 var TOTAL_OFFERS = 8;
 
-var MAX_X = document.querySelector('.map').offsetWidth;
-var MIN_X = 70;
 
 var map = document.querySelector('.map');
 var mapPinsArea = map.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-var createOffer = function (indexOffer) {
-  var createdOffer = {
-
-    author: {
-      avatar: 'img/avatars/user0' + indexOffer + '.png'
-    },
-
-    offer: {
-      title: OFFER_TITLE[indexOffer],
-      address: OFFER_ADDRESS[indexOffer],
-      price: OFFER_PRICE[indexOffer],
-      type: OFFER_TYPE[getRandomArr(OFFER_TYPE)],
-      rooms: ROOMS_NUMBER[indexOffer],
-      guests: GUESTS_NUMBER[indexOffer],
-      checkin: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
-      checkout: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
-      eatures: OFFER_FEATURES[indexOffer],
-      description: OFFER_DESCRIPTION[indexOffer],
-      photos: OFFER_PHOTOS[Math.floor(Math.random() * OFFER_PHOTOS.length)]
-
-    },
-
-    location: {
-      x: getRandomBetween(MIN_X, MAX_X),
-      y: getRandomBetween(130, 630)
-    }
-  };
-
-  return createdOffer;
-};
-
-createOffer(1);
 
 var getRandomArr = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -144,8 +121,38 @@ var createOffers = function (totalOffers) {
   var sortedArr = [];
 
   for (var i = 0; i < totalOffers; i++) {
-    sortedArr [i] = createOffer(i);
+    sortedArr[i] = createOffer(i);
   }
+};
+
+var createOffer = function (indexOffer) {
+  return {
+
+    author: {
+      avatar: 'img/avatars/user0' + indexOffer + '.png'
+    },
+
+    offer: {
+      title: OFFER_TITLE[indexOffer],
+      address: address.x + ', ' + address.y,
+      price: OFFER_PRICE[indexOffer],
+      type: OFFER_TYPE[getRandomArr(OFFER_TYPE)],
+      rooms: ROOMS_NUMBER[indexOffer],
+      guests: GUESTS_NUMBER[indexOffer],
+      checkin: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
+      checkout: OFFER_CHECKS[getRandomArr(OFFER_CHECKS)],
+      eatures: OFFER_FEATURES[indexOffer],
+      description: OFFER_DESCRIPTION[indexOffer],
+      photos: OFFER_PHOTOS[Math.floor(Math.random() * OFFER_PHOTOS.length)]
+
+    },
+
+    location: {
+      x: address.x - PIN_SIZE.width / 2,
+      y: address.y - PIN_SIZE.height
+    }
+  };
+
 };
 
 
@@ -165,7 +172,7 @@ var renderPin = function (pinInfo) {
 var renderPins = function (pinsInfo) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < TOTAL_OFFERS; i++) {
+  for (var i = 0; i < pinsInfo.length; i++) {
     fragment.appendChild(renderPin(pinsInfo[i]));
   }
 
