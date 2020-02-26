@@ -1,5 +1,7 @@
 'use strict';
 
+var TOTAL_OFFERS = 8;
+
 var OFFER_TITLE = [
   'Кондоминиум',
   'Квартира целиком',
@@ -35,13 +37,15 @@ var OFFER_CHECKS = [
   '14:00'
 ];
 
-var OFFER_FEATURES = ['wifi',
+var OFFER_FEATURES = [
+  'wifi',
   'dishwasher',
   'parking',
   'washer',
   'elevator',
   'conditioner'
 ];
+
 var OFFER_DESCRIPTION = [
   'An excelent decision to make',
   'Enjoy your trip with us',
@@ -59,21 +63,10 @@ var OFFER_PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-var address = {
-  x: getRandomBetween(OFFER_LOCATION.X.MIN, OFFER_LOCATION.X.MAX),
-  y: getRandomBetween(OFFER_LOCATION.Y.MIN, OFFER_LOCATION.Y.MAX)
-};
-
-var PIN_SIZE = {
-  width: 40,
-  height: 40
-};
-
-
 var OFFER_LOCATION = {
   X: {
     MIN: 70,
-    MAX: document.querySelector('.map').offsetWidth,
+    MAX: 1070,
   },
   Y: {
     MIN: 130,
@@ -81,13 +74,15 @@ var OFFER_LOCATION = {
   }
 };
 
-var guestsNumber = Math.floor(Math.random() * 3);
-
-var TOTAL_OFFERS = 8;
-
+var PIN_SIZE = {
+  width: 40,
+  height: 40
+};
 
 var map = document.querySelector('.map');
+
 var mapPinsArea = map.querySelector('.map__pins');
+
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var getRandomArr = function (array) {
@@ -98,20 +93,18 @@ var getRandomBetween = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var createOffers = function (totalOffers) {
-  var sortedArr = [];
-
-  for (var i = 0; i < totalOffers; i++) {
-    sortedArr[i] = createOffer(i);
-  }
-};
-
 var createOffer = function (indexOffer) {
-  // eslint-disable-next-line no-return-assign
+  var guestsNumber = Math.floor(Math.random() * 3);
+
+  var address = {
+    x: getRandomBetween(OFFER_LOCATION.X.MIN, OFFER_LOCATION.X.MAX),
+    y: getRandomBetween(OFFER_LOCATION.Y.MIN, OFFER_LOCATION.Y.MAX)
+  };
+
   return {
 
     author: {
-      avatar: 'img/avatars/user0' + indexOffer + '.png'
+      avatar: 'img/avatars/user0' + (indexOffer === 0 ? 1 : indexOffer + 1) + '.png'
     },
 
     offer: {
@@ -134,19 +127,26 @@ var createOffer = function (indexOffer) {
       y: address.y - PIN_SIZE.height
     }
   };
-
 };
 
+var createOffers = function (totalOffers) {
+  var sortedArr = [];
 
-map.classList.remove('map--faded');
+  for (var i = 0; i < totalOffers; i++) {
+    sortedArr[i] = createOffer(i);
+  }
+  return sortedArr;
+};
 
 var renderPin = function (pinInfo) {
   var pinElement = pinTemplate.cloneNode(true);
 
+  var pinImg = pinElement.querySelector('img');
+
   pinElement.style.left = pinInfo.location.x + 'px';
   pinElement.style.top = pinInfo.location.y + 'px';
-  pinElement.querySelector('img').src = pinInfo.author.avatar;
-  pinElement.querySelector('img').alt = pinInfo.offer.title;
+  pinImg.src = pinInfo.author.avatar;
+  pinImg.alt = pinInfo.offer.title;
 
   return pinElement;
 };
@@ -162,4 +162,8 @@ var renderPins = function (pinsInfo) {
 };
 
 var offersArr = createOffers(TOTAL_OFFERS);
+
+map.classList.remove('map--faded'); // временное решение.
+
 mapPinsArea.appendChild(renderPins(offersArr));
+
