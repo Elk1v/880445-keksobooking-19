@@ -225,9 +225,9 @@ var renderCard = function (cardInfo) {
   cardElement.querySelector('.popup__features').innerHTML = '';
   cardElement.querySelector('.popup__features').appendChild(renderFeatures(cardInfo));
   cardElement.querySelector('.popup__description').textContent = cardInfo.offer.description;
+  cardElement.querySelector('.popup__photos').innerHTML = '';
   cardElement.querySelector('.popup__photos').appendChild(renderPhotos(cardInfo));
   cardElement.querySelector('.popup__avatar').src = cardInfo.author.avatar;
-  cardElement.querySelector('.popup__photo:first-child').remove();
 
   return cardElement;
 };
