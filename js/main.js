@@ -79,7 +79,22 @@ var PIN_SIZE = {
   height: 40
 };
 
+var SHARP_END = {
+  vertical: 30,
+  horizontal: 25
+};
+
+var ENTER_KEY = 'Enter';
+
+var LEFT_BUTTON = 0;
+
+var MIN_LENGTH = 'десяти (10)';
+
+var MAX_LENGTH = 'пятидесяти (50)';
+
 var map = document.querySelector('.map');
+
+var pin = map.querySelector('.map__pin--main');
 
 var mapFiltersContainer = map.querySelector('map__filters-container');
 
@@ -89,7 +104,15 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-var cardPhotoTemplate = cardTemplate.querySelector('.popup__photo'); 
+var cardPhotoTemplate = cardTemplate.querySelector('.popup__photo');
+
+var adForm = document.querySelector('.ad-form');
+
+var fieldsets = adForm.querySelectorAll('fieldset');
+
+var pinAddress = adForm.querySelector('#address');
+
+var adFormTitle = adForm.querySelector('#title');
 
 var getRandomArr = function (array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -175,7 +198,7 @@ var renderPins = function (pinsInfo) {
 
   return pinsFragment;
 };
-
+/*
 var renderPhoto = function (photoSrc) {
   var photoElement = cardPhotoTemplate.cloneNode(true);
 
@@ -231,17 +254,79 @@ var renderCard = function (cardInfo) {
 
   return cardElement;
 };
+ */
+var disableFieldsets = function (toDisable) {
+  var fieldsetsToDisable = fieldsets;
 
-map.classList.remove('map--faded'); // временное решение.
+  if (!toDisable) {
+
+    for(var i = 0; i < fieldsetsToDisable.length; i++) {
+      fieldsetsToDisable[i].disabled = false;
+    }
+
+    adForm.classList.remove('ad-form--disabled');
+
+  } else {
+    for(var j = 0; j < fieldsetsToDisable.length; j++) {
+      fieldsetsToDisable[j].disabled = true;
+    }
+
+    adForm.classList.add('ad-form--disabled');
+  }
+};
 
 var offersArr = createOffers(TOTAL_OFFERS);
 
-mapPinsArea.appendChild(renderPins(offersArr));
+var getPinAddress = function () {
+  var pinElement = pin.cloneNode(true);
+  var pinAddressXCoordinate = SHARP_END.horizontal + parseInt(pinElement.style.left, 10);
+  var pinAddressYCoordinate = SHARP_END.vertical + parseInt(pinElement.style.top, 10);
+  pinAddress.value =  pinAddressXCoordinate + ', ' + pinAddressYCoordinate;
+};
 
-map.insertBefore(renderCard(offersArr[0]), mapFiltersContainer);
+var activateMode = function () {
+  map.classList.remove('map--faded');
+  mapPinsArea.appendChild(renderPins(offersArr));
+  disableFieldsets(false);
+  
+};
 
+var titleValidation = function () {
+  if (adFormTitle.validity.tooLong) {
+    adFormTitle.setCustomValidity('Заголовок не должен быть длиннее ' + MAX_LENGTH + ' символов');
+  }
+  else if (adFormTitle.validity.tooShort) {
+    adFormTitle.setCustomValidity('Заголовок не должен быть короче ' + MIN_LENGTH + ' символов');
+  }
+  else if (adFormTitle.validity.valueMissing) {
+    adFormTitle.setCustomValidity('Введите пожалуйста заголовок вашего объявления');
+  }
+};
 
+getPinAddress();
 
+pinAddress.readOnly = true;
 
+// map.insertBefore(renderCard(offersArr[0]), mapFiltersContainer);
 
+disableFieldsets(true);
 
+pin.addEventListener('mousedown', function (evt) {
+
+  if (evt.button === LEFT_BUTTON) {
+    activateMode();
+  }
+  
+});
+
+pin.addEventListener('keydown', function (evt) {
+
+  if (evt.key === ENTER_KEY) {
+    activateMode();
+  }
+
+});
+
+adFormTitle.addEventListener('invalid', function() {
+  titleValidation();
+});
