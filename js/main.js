@@ -533,6 +533,7 @@ pin.addEventListener('mousedown', function (evt) {
 
   if (evt.button === LEFT_BUTTON) {
     onPinActivateMode();
+    console.log(evt.target);
   }
   
 });
@@ -589,7 +590,3 @@ adFormTimein.addEventListener('change', function () {
 adFormTimeout.addEventListener('change', function () {
   adFormTimein.value = adFormTimeout.value;
 });
-
-
-
-
