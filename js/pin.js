@@ -8,7 +8,7 @@
   var create = function (advert) {
     var pin = pinTemplate.cloneNode(true);
     pin.style = 'left: ' + advert.location.x + 'px; top: ' + advert.location.y + 'px;';
-    
+
     var avatar = pin.querySelector('img');
     avatar.src = advert.author.avatar;
     avatar.alt = advert.offer.title;

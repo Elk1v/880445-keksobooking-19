@@ -34,7 +34,7 @@
     for (var i = 0; i < adverts.length && i < ADVERTS_NUM; i++) {
       var advert = adverts[i];
 
-      var pin = window.pin.create(advert)
+      var pin = window.pin.create(advert);
       makeCard(pin, advert);
 
       fragment.appendChild(pin);
