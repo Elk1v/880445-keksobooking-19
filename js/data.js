@@ -6,7 +6,7 @@
   var PIN_HEIGHT = 78;
   var PIN_ELEMENT_HEIGHT = 13;
   var PIN_OFFSET_Y = 60;
-  
+
   var DEFAULT_AVATAR_IMG = 'img/muffin-grey.svg';
   var FILE_TYPES = ['png', 'jpg', 'jpeg', 'gif'];
 
