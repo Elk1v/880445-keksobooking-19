@@ -42,12 +42,12 @@
     capacities.forEach(function (capacity) {
       capacity.disabled = !suitableCapacities.includes(parseInt(capacity.value, 10));
     });
-  }
+  };
 
   var syncRoomsAndCapacities = function () {
-    updateCapacities(roomsField.value)
+    updateCapacities(roomsField.value);
     capacityField.value = window.data.Room[roomsField.value][0];
-  }
+  };
 
   var onRoomFieldChange = function () {
     syncRoomsAndCapacities();
@@ -59,7 +59,7 @@
 
   var onResetFormBtnClick = function (evt) {
     evt.preventDefault();
-    
+
     window.page.reset();
     resetFormBtn.removeEventListener('click', onResetFormBtnClick);
     setAddressFieldValue();

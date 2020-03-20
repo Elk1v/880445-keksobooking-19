@@ -70,7 +70,7 @@
       window.map.removeCards();
       window.backend.load(filterAdverts, window.backend.onErrorLoad);
       window.map.removePins();
-    })
+    });
   };
 
   houseTypeField.addEventListener('change', onFiltersChange);
