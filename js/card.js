@@ -24,8 +24,8 @@
 
     removeChildren(featuresList, features);
 
-    advert.offer.features.map(createFeatureElement).forEach(function (element) {
-      featuresList.appendChild(element);
+    advert.offer.features.forEach(function (feature) {
+      featuresList.appendChild(createFeatureElement(feature));
     });
   };
 
@@ -44,8 +44,8 @@
     removeChildren(photosList, photos);
 
     if (advert.offer.photos) {
-      advert.offer.photos.map(createPhotoElement).forEach(function (element) {
-        photosList.appendChild(element);
+      advert.offer.photos.forEach(function (photo) {
+        photosList.appendChild(createPhotoElement(photo));
       });
     } else {
       card.removeChild(photosList);

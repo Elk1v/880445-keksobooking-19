@@ -61,6 +61,7 @@
     evt.preventDefault();
 
     window.page.reset();
+    updatePriceField();
     resetFormBtn.removeEventListener('click', onResetFormBtnClick);
     setAddressFieldValue();
   };
@@ -93,6 +94,7 @@
 
   var onSuccessLoad = function () {
     window.page.reset();
+    updatePriceField();
     var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
     var successMessage = successMessageTemplate.cloneNode(true);
     main.insertBefore(successMessage, notice);
@@ -104,12 +106,13 @@
     };
 
     var onEscapeKeyPress = function (evt) {
-      if (evt.key === window.data.Keys.ESC) {
+      if (evt.key === window.data.Key.ESC) {
         successMessage.remove();
         document.removeEventListener('keydown', onEscapeKeyPress);
         document.removeEventListener('click', onEmptyAriaClick);
       }
     };
+
     document.addEventListener('click', onEmptyAriaClick);
     document.addEventListener('keydown', onEscapeKeyPress);
   };
