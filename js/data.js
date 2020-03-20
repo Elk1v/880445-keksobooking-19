@@ -21,24 +21,24 @@
   };
 
   var MinPrice = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
   };
 
   var HouseType = {
-    bungalo: 'Бунгало',
-    flat: 'Квартира',
-    house: 'Дом',
-    palace: 'Дворец'
+    BUNGALO: 'Бунгало',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец'
   };
 
   var Room = {
-    1: 1,
-    2: 2,
-    3: 3,
-    100: 0
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
   };
 
   var MainPinDefaultPosition = {

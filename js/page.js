@@ -42,6 +42,7 @@
         houseImgContainer.removeChild(it);
       });
     }
+    window.form.setAddressFieldValue();
 
     avatarChooser.removeEventListener('change', window.images.onAvatarChooserChange);
 

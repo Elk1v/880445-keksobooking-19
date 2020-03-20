@@ -14,6 +14,11 @@
     MESSAGE: 3000
   };
 
+  var RequestMethod = {
+    GET: 'GET',
+    POST: 'POST'
+  };
+
   var Message = {
     STATUS: 'Статус ответа: ',
     DISCONNECT: 'Произошла ошибка соединения',
@@ -49,7 +54,7 @@
 
     xhr.timeout = Timeout.LOAD;
 
-    xhr.open('GET', Url.LOAD);
+    xhr.open(RequestMethod.GET, Url.LOAD);
     xhr.send();
   };
 
@@ -70,7 +75,7 @@
       onError(Message.DISCONNECT);
     });
 
-    xhr.open('POST', Url.UPLOAD);
+    xhr.open(RequestMethod.POST, Url.UPLOAD);
     xhr.send(data);
   };
 

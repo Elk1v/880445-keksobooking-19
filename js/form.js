@@ -22,9 +22,13 @@
   var houseImageChooser = advertForm.querySelector('.ad-form__input');
   var houseImageContainer = advertForm.querySelector('.ad-form__photo');
 
-  var onTypeInputChange = function (evt) {
-    priceField.setAttribute('min', window.data.MinPrice[evt.target.value]);
-    priceField.setAttribute('placeholder', window.data.MinPrice[evt.target.value]);
+  var updatePriceField = function () {
+    priceField.setAttribute('min', window.data.MinPrice[typeField.value.toUpperCase()]);
+    priceField.setAttribute('placeholder', window.data.MinPrice[typeField.value.toUpperCase()]);
+  };
+
+  var onTypeInputChange = function () {
+    updatePriceField();
   };
 
   var makeFieldsDisabled = function (fields) {
@@ -33,33 +37,32 @@
     });
   };
 
-  var checkRooms = function (options, roomIndex) {
-    if (roomIndex === 0) {
-      options[3].disabled = false;
-    } else {
-      for (var i = roomIndex; i > 0; i--) {
-        options.forEach(function (capacity) {
-          capacity.disabled = parseInt(capacity.value, 10) !== i;
-        });
-      }
-    }
+  var updateCapacities = function (selectedRooms) {
+    var suitableCapacities = window.data.Room[selectedRooms];
+    capacities.forEach(function (capacity) {
+      capacity.disabled = !suitableCapacities.includes(parseInt(capacity.value, 10));
+    });
+  }
+
+  var syncRoomsAndCapacities = function () {
+    updateCapacities(roomsField.value)
+    capacityField.value = window.data.Room[roomsField.value][0];
+  }
+
+  var onRoomFieldChange = function () {
+    syncRoomsAndCapacities();
   };
 
-  var onRoomFieldChange = function (evt) {
-    makeFieldsDisabled(capacities);
-
-    checkRooms(capacities, window.data.Room[evt.target.value]);
-
-    capacityField.value = window.data.Room[evt.target.value];
-  };
-
-  var changeAddressField = function () {
+  var setAddressFieldValue = function () {
     addressField.value = (mainPin.offsetLeft + Math.floor(mainPin.offsetWidth / 2)) + ', ' + (mainPin.offsetTop + mainPin.offsetHeight + window.data.PIN_ELEMENT_HEIGHT - window.data.PIN_OFFSET_Y);
   };
 
-  var onResetFormBtnClick = function () {
+  var onResetFormBtnClick = function (evt) {
+    evt.preventDefault();
+    
     window.page.reset();
     resetFormBtn.removeEventListener('click', onResetFormBtnClick);
+    setAddressFieldValue();
   };
 
   var onAvatarChooserChange = function () {
@@ -78,33 +81,15 @@
       fieldset.disabled = false;
     });
 
-    capacityField.value = roomsField.value;
-    makeFieldsDisabled(capacities);
-    checkRooms(capacities, parseInt(roomsField.value, 10));
+    priceField.setAttribute('placeholder', window.data.MinPrice[typeField.value.toUpperCase()]);
+    setAddressFieldValue();
 
-    priceField.setAttribute('placeholder', window.data.MinPrice[typeField.value]);
-    changeAddressField();
+    syncRoomsAndCapacities();
 
     resetFormBtn.addEventListener('click', onResetFormBtnClick);
     avatarChooser.addEventListener('change', onAvatarChooserChange);
     houseImageChooser.addEventListener('change', onHouseImageChooserChange);
   };
-
-  typeField.addEventListener('change', onTypeInputChange);
-
-  makeFieldsDisabled(formFields);
-
-  mapFilter.style.display = 'none';
-
-  roomsField.addEventListener('change', onRoomFieldChange);
-
-  checkinField.addEventListener('change', function () {
-    checkoutField.value = checkinField.value;
-  });
-
-  checkoutField.addEventListener('change', function () {
-    checkinField.value = checkoutField.value;
-  });
 
   var onSuccessLoad = function () {
     window.page.reset();
@@ -129,14 +114,28 @@
     document.addEventListener('keydown', onEscapeKeyPress);
   };
 
+  makeFieldsDisabled(formFields);
+  updatePriceField();
+  setAddressFieldValue();
+
+  mapFilter.style.display = 'none';
+
+  typeField.addEventListener('change', onTypeInputChange);
+  roomsField.addEventListener('change', onRoomFieldChange);
+  checkinField.addEventListener('change', function () {
+    checkoutField.value = checkinField.value;
+  });
+  checkoutField.addEventListener('change', function () {
+    checkinField.value = checkoutField.value;
+  });
   advertForm.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(advertForm), onSuccessLoad, window.backend.onErrorUpload);
     evt.preventDefault();
+    window.backend.upload(new FormData(advertForm), onSuccessLoad, window.backend.onErrorUpload);
   });
 
   window.form = {
     activate: activate,
-    changeAddressField: changeAddressField,
+    setAddressFieldValue: setAddressFieldValue,
     makeFieldsDisabled: makeFieldsDisabled
   };
 })();

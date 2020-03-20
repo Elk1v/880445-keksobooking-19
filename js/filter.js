@@ -35,26 +35,22 @@
     return houseGuestsField.value === 'any' ? true : parseInt(houseGuestsField.value, 10) === advert.offer.guests;
   };
 
-  var onFeatureChange = function () {
+  var getSelectedFeatures = function () {
     return Array.from(mapFilter.querySelectorAll('.map__checkbox:checked')).map(function (it) {
       return it.value;
     });
   };
 
   var filterByFeatures = function (advert) {
-    return onFeatureChange().every(function (feature) {
+    return getSelectedFeatures().every(function (feature) {
       return advert.offer.features.includes(feature);
     });
   };
 
-  var filtrateAdverts = function (adverts) {
+  var filterAdverts = function (adverts) {
     var filtered = [];
 
-    for (var i = 0; i < adverts.length; i++) {
-      if (filtered.length === window.map.ADVERTS_NUM) {
-        break;
-      }
-
+    for (var i = 0; i < adverts.length && filtered.length < window.map.ADVERTS_NUM; i++) {
       var advert = adverts[i];
 
       if (filterByType(advert)
@@ -66,25 +62,22 @@
       }
     }
 
+    window.map.renderPins(filtered);
+  };
+
+  var onFiltersChange = function () {
     window.debounce(function () {
-      window.map.renderPins(filtered);
-    });
-
+      window.map.removeCards();
+      window.backend.load(filterAdverts, window.backend.onErrorLoad);
+      window.map.removePins();
+    })
   };
 
-  var onHouseFilterFieldsChange = function () {
-    window.map.removeCards();
-    window.backend.load(filtrateAdverts, window.backend.onErrorLoad);
-    window.map.removePins();
-  };
-
-  houseTypeField.addEventListener('change', onHouseFilterFieldsChange);
-  housePriceField.addEventListener('change', onHouseFilterFieldsChange);
-  houseRoomsField.addEventListener('change', onHouseFilterFieldsChange);
-  houseGuestsField.addEventListener('change', onHouseFilterFieldsChange);
+  houseTypeField.addEventListener('change', onFiltersChange);
+  housePriceField.addEventListener('change', onFiltersChange);
+  houseRoomsField.addEventListener('change', onFiltersChange);
+  houseGuestsField.addEventListener('change', onFiltersChange);
   houseFeatures.forEach(function (item) {
-    item.addEventListener('change', onHouseFilterFieldsChange);
-    item.addEventListener('change', onFeatureChange);
+    item.addEventListener('change', onFiltersChange);
   });
-
 })();
