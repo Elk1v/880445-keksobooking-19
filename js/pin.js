@@ -63,7 +63,7 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      window.form.changeAddressField();
+      window.form.setAddressFieldValue();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
