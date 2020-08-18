@@ -2,7 +2,6 @@
 
 (function () {
   var ADVERTS_NUM = 5;
-
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var mapFilter = map.querySelector('.map__filters');
