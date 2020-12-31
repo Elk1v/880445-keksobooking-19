@@ -5,8 +5,8 @@
   var STATUS_OK = 200;
 
   var Url = {
-    LOAD: 'https://js.dump.academy/keksobooking/data',
-    UPLOAD: 'https://js.dump.academy/keksobooking'
+    LOAD: 'https://js.dump.academy/keksobooking/data/',
+    UPLOAD: 'https://js.dump.academy/keksobooking/'
   };
 
   var Timeout = {
